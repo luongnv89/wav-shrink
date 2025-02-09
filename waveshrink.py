@@ -5,7 +5,7 @@ from rich.console import Console
 
 console = Console()
 
-def wav_shrink(input_file, output_format="mp3", bitrate="64k"):
+def wav_shrink(input_file, output_format="mp3", bitrate="64k", keep_original=False):
     """
     Converts a WAV file to a compressed format (MP3, OGG, etc.) with a real progress bar.
 
@@ -13,6 +13,7 @@ def wav_shrink(input_file, output_format="mp3", bitrate="64k"):
         input_file (str): Path to the input WAV file.
         output_format (str): Target format (e.g., "mp3", "ogg").
         bitrate (str): Bitrate for compression (e.g., "64k", "128k").
+        keep_original (bool): If False, delete the original WAV file after conversion.
 
     Returns:
         str: Path to the converted file.
@@ -53,6 +54,13 @@ def wav_shrink(input_file, output_format="mp3", bitrate="64k"):
 
         # Export compressed file
         combined.export(output_file, format=output_format, bitrate=bitrate)
+
+    if not keep_original:
+        try:
+            os.remove(input_file)
+            console.print(f"[dim]Deleted original file: {input_file}[/dim]")
+        except OSError as e:
+            console.print(f"[yellow]Warning:[/yellow] Could not delete original file: {e}")
 
     console.print(
         f"[bold green]✅ Conversion complete![/bold green] Saved as: {output_file}"

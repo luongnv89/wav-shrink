@@ -33,6 +33,12 @@ def main():
         default="64k",
         help="Bitrate for the output file (default: 64k).",
     )
+    parser.add_argument(
+        "-k",
+        "--keep",
+        action="store_true",
+        help="Keep original WAV files after conversion (default: delete).",
+    )
 
     args = parser.parse_args()
 
@@ -52,7 +58,7 @@ def main():
 
         for wav_file in wav_files:
             input_path = os.path.join(args.directory, wav_file)
-            wav_shrink(input_path, args.format, args.bitrate)
+            wav_shrink(input_path, args.format, args.bitrate, args.keep)
 
     elif args.input:
         # Convert a single file
@@ -61,7 +67,7 @@ def main():
             parser.print_help()
             return
 
-        wav_shrink(args.input, args.format, args.bitrate)
+        wav_shrink(args.input, args.format, args.bitrate, args.keep)
 
     else:
         print("❌ Error: You must specify either a WAV file or a directory containing WAV files.")
